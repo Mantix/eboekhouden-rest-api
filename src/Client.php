@@ -32,7 +32,7 @@ class Client {
     /**
      * @var string The API base URL
      */
-    private string $baseUrl = 'https://api.e-boekhouden.nl/v1';
+    private string $baseUrl = 'https://api.e-boekhouden.nl/v1/';
 
     /**
      * Constructor
@@ -59,7 +59,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function createSession(): array {
-        $response = $this->client->post('/session', [
+        $response = $this->client->post('session', [
             'json' => [
                 'accessToken' => $this->accessToken,
                 'source' => $this->source,
@@ -81,7 +81,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function endSession(): void {
-        $response = $this->client->delete('/session', [
+        $response = $this->client->delete('session', [
             'headers' => $this->getAuthHeaders(),
         ]);
 
@@ -99,7 +99,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getAdministrations(int $limit = 100, int $offset = 0): array {
-        return $this->get('/administration', [
+        return $this->get('administration', [
             'limit' => $limit,
             'offset' => $offset,
         ]);
@@ -115,7 +115,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getLinkedAdministrations(int $limit = 100, int $offset = 0): array {
-        return $this->get('/administration/linked', [
+        return $this->get('administration/linked', [
             'limit' => $limit,
             'offset' => $offset,
         ]);
@@ -130,7 +130,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getCostCenters(array $params = []): array {
-        return $this->get('/costcenter', $params);
+        return $this->get('costcenter', $params);
     }
 
     /**
@@ -142,7 +142,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getCostCenter(int $id): array {
-        return $this->get("/costcenter/{$id}");
+        return $this->get("costcenter/{$id}");
     }
 
     /**
@@ -155,7 +155,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getEmailTemplates(int $limit = 100, int $offset = 0): array {
-        return $this->get('/emailtemplate', [
+        return $this->get('emailtemplate', [
             'limit' => $limit,
             'offset' => $offset,
         ]);
@@ -170,7 +170,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function createInvoice(array $data): array {
-        return $this->post('/invoice', $data);
+        return $this->post('invoice', $data);
     }
 
     /**
@@ -182,7 +182,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getInvoices(array $params = []): array {
-        return $this->get('/invoice', $params);
+        return $this->get('invoice', $params);
     }
 
     /**
@@ -194,7 +194,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getInvoice(int $id): array {
-        return $this->get("/invoice/{$id}");
+        return $this->get("invoice/{$id}");
     }
 
     /**
@@ -206,7 +206,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getInvoiceTemplates(array $params = []): array {
-        return $this->get('/invoicetemplate', $params);
+        return $this->get('invoicetemplate', $params);
     }
 
     /**
@@ -218,7 +218,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getLedgers(array $params = []): array {
-        return $this->get('/ledger', $params);
+        return $this->get('ledger', $params);
     }
 
     /**
@@ -230,7 +230,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function createLedger(array $data): array {
-        return $this->post('/ledger', $data);
+        return $this->post('ledger', $data);
     }
 
     /**
@@ -242,7 +242,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getLedger(int $id): array {
-        return $this->get("/ledger/{$id}");
+        return $this->get("ledger/{$id}");
     }
 
     /**
@@ -255,7 +255,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function updateLedger(int $id, array $data): void {
-        $this->patch("/ledger/{$id}", $data);
+        $this->patch("ledger/{$id}", $data);
     }
 
     /**
@@ -268,7 +268,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getLedgerBalance(int $id, array $params = []): array {
-        return $this->get("/ledger/{$id}/balance", $params);
+        return $this->get("ledger/{$id}/balance", $params);
     }
 
     /**
@@ -280,7 +280,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getMutations(array $params = []): array {
-        return $this->get('/mutation', $params);
+        return $this->get('mutation', $params);
     }
 
     /**
@@ -292,7 +292,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function createMutation(array $data): array {
-        return $this->post('/mutation', $data);
+        return $this->post('mutation', $data);
     }
 
     /**
@@ -304,7 +304,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getMutation(int $id): array {
-        return $this->get("/mutation/{$id}");
+        return $this->get("mutation/{$id}");
     }
 
     /**
@@ -318,7 +318,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getOutstandingInvoices(string $credDeb, int $limit = 100, int $offset = 0): array {
-        return $this->get('/mutation/invoice/outstanding', [
+        return $this->get('mutation/invoice/outstanding', [
             'credDeb' => $credDeb,
             'limit' => $limit,
             'offset' => $offset,
@@ -334,7 +334,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getProducts(array $params = []): array {
-        return $this->get('/product', $params);
+        return $this->get('product', $params);
     }
 
     /**
@@ -346,7 +346,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getProduct(int $id): array {
-        return $this->get("/product/{$id}");
+        return $this->get("product/{$id}");
     }
 
     /**
@@ -358,7 +358,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getRelations(array $params = []): array {
-        return $this->get('/relation', $params);
+        return $this->get('relation', $params);
     }
 
     /**
@@ -370,7 +370,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function createRelation(array $data): array {
-        return $this->post('/relation', $data);
+        return $this->post('relation', $data);
     }
 
     /**
@@ -382,7 +382,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getRelation(int $id): array {
-        return $this->get("/relation/{$id}");
+        return $this->get("relation/{$id}");
     }
 
     /**
@@ -395,7 +395,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function updateRelation(int $id, array $data): void {
-        $this->patch("/relation/{$id}", $data);
+        $this->patch("relation/{$id}", $data);
     }
 
     /**
@@ -407,7 +407,7 @@ class Client {
      * @throws EBoekhoudenException
      */
     public function getUnits(array $params = []): array {
-        return $this->get('/unit', $params);
+        return $this->get('unit', $params);
     }
 
     /**
