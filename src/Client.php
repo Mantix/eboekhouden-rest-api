@@ -483,7 +483,7 @@ class Client {
         $data = json_decode($body, true);
 
         if ($statusCode >= 200 && $statusCode < 300) {
-            return $data;
+            return $data ?? [];
         }
 
         $errorMessage = '';
