@@ -254,8 +254,8 @@ class Client {
      * @throws GuzzleException
      * @throws EBoekhoudenException
      */
-    public function updateLedger(int $id, array $data): void {
-        $this->patch("ledger/{$id}", $data);
+    public function updateLedger(int $id, array $data): array {
+        return $this->patch("ledger/{$id}", $data);
     }
 
     /**
@@ -394,8 +394,8 @@ class Client {
      * @throws GuzzleException
      * @throws EBoekhoudenException
      */
-    public function updateRelation(int $id, array $data): void {
-        $this->patch("relation/{$id}", $data);
+    public function updateRelation(int $id, array $data): array {
+        return $this->patch("relation/{$id}", $data);
     }
 
     /**
