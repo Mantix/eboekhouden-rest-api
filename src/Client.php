@@ -9,6 +9,9 @@ use GuzzleHttp\Exception\GuzzleException;
  * EBoekhouden API client
  */
 class Client {
+    public const BASE_URL_NL = 'https://api.e-boekhouden.nl/v1/';
+    public const BASE_URL_BE = 'https://api.e-boekhouden.be/v1/';
+
     /**
      * @var GuzzleClient The HTTP client
      */
@@ -32,7 +35,7 @@ class Client {
     /**
      * @var string The API base URL
      */
-    private string $baseUrl = 'https://api.e-boekhouden.nl/v1/';
+    private string $baseUrl = self::BASE_URL_NL;
 
     /**
      * Constructor
@@ -40,10 +43,16 @@ class Client {
      * @param string $accessToken The API access token
      * @param string $source The source identifier (max 10 characters)
      * @param array $clientOptions Additional options for the HTTP client
+     * @param string|null $baseUrl Optional base URL for the API (e.g. Belgian endpoint)
      */
-    public function __construct(string $accessToken, string $source, array $clientOptions = []) {
+    public function __construct(string $accessToken, string $source, array $clientOptions = [], ?string $baseUrl = null) {
         $this->accessToken = $accessToken;
         $this->source = $source;
+
+        if ($baseUrl !== null) {
+            // Ensure a single trailing slash for consistency
+            $this->baseUrl = rtrim($baseUrl, '/') . '/';
+        }
 
         $this->client = new GuzzleClient(array_merge([
             'base_uri' => $this->baseUrl,
