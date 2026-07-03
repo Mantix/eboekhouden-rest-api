@@ -433,10 +433,31 @@ class Client {
 
         $response = $this->client->get($endpoint, [
             'headers' => $this->getAuthHeaders(),
-            'query' => $params,
+            'query' => $this->buildQueryParams($params),
         ]);
 
         return $this->handleResponse($response);
+    }
+
+    /**
+     * Build query parameters, placing filter operators in the parameter name.
+     *
+     * @param array $params The request parameters
+     * @return array The formatted query parameters
+     */
+    private function buildQueryParams(array $params): array {
+        $query = [];
+
+        foreach ($params as $key => $value) {
+            if ($value instanceof FilterValue) {
+                $query["{$key}[{$value->getOperator()}]"] = $value->getValue();
+                continue;
+            }
+
+            $query[$key] = $value;
+        }
+
+        return $query;
     }
 
     /**

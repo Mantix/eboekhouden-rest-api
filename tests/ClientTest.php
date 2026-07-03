@@ -5,9 +5,11 @@ namespace Mantix\EBoekhoudenRestApi\Tests;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Mantix\EBoekhoudenRestApi\Client;
 use Mantix\EBoekhoudenRestApi\EBoekhoudenException;
+use Mantix\EBoekhoudenRestApi\Filter;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase {
@@ -69,6 +71,45 @@ class ClientTest extends TestCase {
 
         // Call the method under test
         $this->client->createSession();
+    }
+
+    public function testGetRelationsWithFilters() {
+        $container = [];
+        $history = Middleware::history($container);
+
+        $this->mockHandler = new MockHandler();
+        $handlerStack = HandlerStack::create($this->mockHandler);
+        $handlerStack->push($history);
+        $guzzleClient = new GuzzleClient(['handler' => $handlerStack]);
+
+        $reflectionProperty = new \ReflectionProperty(Client::class, 'client');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->client, $guzzleClient);
+
+        $this->mockHandler->append(new Response(200, [], json_encode([
+            'token' => 'test_session_token',
+            'expiresIn' => 3600,
+        ])));
+
+        $this->mockHandler->append(new Response(200, [], json_encode([
+            'items' => [],
+            'count' => 0,
+        ])));
+
+        $this->client->getRelations([
+            'name' => Filter::like('%Bedrijf%'),
+            'code' => Filter::notEq('REL001'),
+            'amount' => Filter::gte(100),
+            'date' => Filter::dateRange('2023-01-01', '2023-12-31'),
+        ]);
+
+        $request = $container[1]['request'];
+        $queryString = $request->getUri()->getQuery();
+
+        $this->assertStringContainsString('name%5Blike%5D=%25Bedrijf%25', $queryString);
+        $this->assertStringContainsString('code%5Bnot_eq%5D=REL001', $queryString);
+        $this->assertStringContainsString('amount%5Bgte%5D=100', $queryString);
+        $this->assertStringContainsString('date%5Brange%5D=2023-01-01%2C2023-12-31', $queryString);
     }
 
     public function testGetRelations() {
